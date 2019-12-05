@@ -22,6 +22,9 @@ exports.Message = function (text, msgObj) {
             var prefix = bot.adapter.directreply(msgObj.message_id);
             rawSend(resp.startsWith('    ') ? '    reply ' + msgObj.user_name + '\n' + resp : prefix + ' ' + resp);
         },
+        directsend:function (text){
+            rawSend(text);
+        },
         userid: function(){
             return msgObj.user_id;
         },

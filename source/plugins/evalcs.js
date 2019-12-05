@@ -36,20 +36,20 @@ module.exports = function (bot) {
             var ms = new Date().getTime() - waitTime;
 
             if (err) {
-                bot.adapter.out.add('<!>' + err);
+                msg.directsend('<!>' + err);
             } else {
                 if (timed) {
                     setTimeout(function () {
-                        bot.adapter.out.add('!>>CodeWorker complete in ' + ms + 'ms');
+                        msg.directsend('!>>CodeWorker complete in ' + ms + 'ms');
                     }, 500);
                 }
                 console.log(result);
                 if (result && result.startsWith('!@#$%^&*()<eerror>:')) {
-                    bot.adapter.out.add(dressUpAnswer('-!!>', result.slice(19)));
+                    msg.directsend(dressUpAnswer('-!!>', result.slice(19)));
                 } else if (result && result.startsWith('!@#$%^&*()<cerror>:')) {
-                    bot.adapter.out.add(dressUpAnswer('<!>', result.slice(19)));
+                    msg.directsend(dressUpAnswer('<!>', result.slice(19)));
                 } else {
-                    bot.adapter.out.add(dressUpAnswer(isString ? '!==' : '!=>', result));
+                    msg.directsend(dressUpAnswer(isString ? '!==' : '!=>', result));
                 }
             }
         }
