@@ -9,65 +9,34 @@ module.exports = function (bot) {
         name: 'google',
 
         fun: function (msg, cb) {
-            var self = this;
+            bot.IO.googleCSE(msg, finishedLogic, (p)=>{
+                p.key = bot.config.googleApiKey;
+                p.cx = bot.config.googleSearchEngineId;
+                return p;
+            });
 
-            this.logic(msg, finishedLogic);
-
-            function finishedLogic (obj) {
-                var res = self.format(obj);
-
-                if (cb && cb.call) {
-                    cb(res);
-                }
-                else {
-                    msg.directreply(res);
-                }
-            }
-        },
-
-        logic: function (query, cb) {
-            bot.IO.jsonp.google(String(query) + ' -site:w3schools.com', finishCall);
-
-            function finishCall (resp) {
-                bot.log(resp, '/google response');
-                if (resp.responseStatus !== 200) {
-                    cb('My Google-Fu is on vacation; status ' +
-                            resp.responseStatus);
-                    return;
-                }
-
-                // TODO: change hard limit to argument
-                var results = resp.responseData.results.slice(0, 3);
-                results.query = query;
-                bot.log(results, '/google results');
-
-                cb(results);
-            }
-        },
-
-        format: function format (results) {
-            if (!results.length) {
-                return nulls.random();
-            }
-
-            var res = formatLink(results.query) + ' ' +
-                results.map(formatResult).join(' ; ');
-
-            if (res.length > bot.adapter.maxLineLength) {
-                res = results.pluck('unescapedUrl').join(' ; ');
-            }
-
-            return res;
-
-            function formatResult (result) {
-                var title = bot.IO.decodehtmlEntities(result.titleNoFormatting);
-                return bot.adapter.link(title, result.unescapedUrl);
-            }
-            function formatLink (query) {
-                var link =
-                    'http://google.com/search?q=' + encodeURIComponent(query);
-
-                return bot.adapter.link('*', link);
+            function finishedLogic(obj) {
+                var res = JSON.parse(obj);
+                if (res.items) {
+                    if (res.items.length == 0) {
+                        msg.directreply('Google Fu was unable to woooo-OOO-wahhh!');
+                        return;
+                    }
+                    msg.directreply(
+                        '[' + res.items[0].title + ']\n' +
+                        res.items[0].link + '\n' +
+                        res.items[0].snippet
+                    );
+                    if (res.items.length >= 2) {
+                        msg.directreply(
+                            '[' + res.items[1].title + ']\n' +
+                            res.items[1].link + '\n' +
+                            res.items[1].snippet
+                        );
+                    }
+                } else if (res.error)
+                    msg.directreply('Google Fu is rest, try again later');
+                else msg.directreply('Google Fu was unable to woooo-OOO-wahhh!');
             }
         },
 

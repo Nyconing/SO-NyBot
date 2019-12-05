@@ -21,7 +21,13 @@ module.exports = function (bot) {
             res = re.exec(sentence);
 
         if (res) {
-            bot.adapter.out.add(hammers[res[1]], msgObj.room_id);
+            if (!bot.adapter.hammerTime){
+                bot.adapter.hammerTime = new Date().getTime()-50 ;
+            }
+            if (bot.adapter.hammerTime < new Date().getTime()) {
+                bot.adapter.out.add(hammers[res[1]], msgObj.room_id);
+            }
+            bot.adapter.hammerTime = new Date().getTime() + (120 * 1000);
         }
     });
 

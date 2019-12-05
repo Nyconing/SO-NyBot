@@ -2,10 +2,11 @@ module.exports = function (bot) {
 /*global Map*/
 
     // only activate for SO room 17; TODO consider changing if well accepted
-    if (bot.adapter.site !== 'stackoverflow' || bot.adapter.roomid !== 17) {
-        bot.log('Not activating unformatted code checking; not in right room/site');
-        return;
-    }
+    //if (bot.adapter.site !== 'stackoverflow' || bot.adapter.roomid !== 17) {
+    //    bot.log('Not activating unformatted code checking; not in right room/site');
+    //    return;
+    //}
+    //Why do this while the condition actually parsed in later? keep in mind bot can be in multiple rooms
 
     var badMessages = new Map();
 
@@ -18,7 +19,7 @@ module.exports = function (bot) {
         }
 
         // so far it should only apply to the js room
-        if (msgObj.room_id !== 17) {
+        if (msgObj.room_id !== 7) {
             return;
         }
 

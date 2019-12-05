@@ -29,9 +29,9 @@ module.exports = function (bot) {
         },
 
         eval: function (msg, cb) {
-            cb = cb || msg.directreply.bind(msg);
-
-            return bot.prettyEval(msg, cb);
+            //cb = cb || msg.directreply.bind(msg);
+            //return bot.prettyEval(msg, cb);
+            bot.adapter.out.add('!~>help', msg.roomid);
         },
 
         refresh: function() {

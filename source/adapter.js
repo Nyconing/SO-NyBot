@@ -389,6 +389,24 @@ var input = {
 
             IO.in.receive(msgObj);
         });
+
+
+        let lines = this.breakMultilineMessage(msg.content);
+        // supports multilines on eval
+        if (lines[0].startsWith(window.bot.config.pattern + '&gt;')||lines[0].startsWith(window.bot.config.pattern + '+')||lines[0].startsWith(window.bot.config.pattern + '=')) {
+            var msgObj = Object.merge(msg, {
+                content: lines.join('\n')
+            });
+            IO.in.receive(msgObj);
+        } else {
+            lines.forEach(function (line) {
+                var msgObj = Object.merge(msg, {
+                    content: line.trim()
+                });
+
+                IO.in.receive(msgObj);
+            });
+        }
     },
     breakMultilineMessage: function (content) {
         // remove the enclosing tag
@@ -493,8 +511,9 @@ var output = {
     409: 0,
     // number of messages sent
     total: 0,
-    interval: input.interval + 500,
-    flushWait: 500,
+    interval: input.interval + 380,
+    // send it immediately
+    flushWait: 1,
 
     init: function () {},
 
@@ -515,9 +534,13 @@ var output = {
         // unless the bot's stopped. in which case, it should shut the fudge up
         // the freezer and never let it out. not until it can talk again. what
         // was I intending to say?
-        if (this.stopped) {
-            // ah fuck it
-            return;
+        if (!obj.text.includes(' !@#$qwe123ZXC')) {
+            if (this.stopped) {
+                // ah fuck it
+                return;
+            }
+        } else {
+            obj.text = obj.text.replace(' !@#$qwe123ZXC', ' ');
         }
 
         // #152, wait a bit before sending output.
@@ -558,7 +581,7 @@ var output = {
                 console.error(xhr);
                 output.add(
                     'Error ' + xhr.status + ' occured, I will call the maid ' +
-                    ' (@Zirak)');
+                    ' (@Nyconing)');
             }
             else {
                 output.total += 1;

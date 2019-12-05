@@ -308,6 +308,33 @@ IO.xhr = function (params) {
     return xhr;
 };
 
+IO.httpGet = function (url, params, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    };
+    // true for asynchronous
+    xmlHttp.open('GET', url + encodeQueryData(params), true);
+    xmlHttp.send(null);
+
+    function encodeQueryData(data) {
+        const ret = [];
+        for (let d in data)
+            ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+        return ret.join('&');
+    }
+};
+
+IO.googleCSE = function (keyword, callback, paramsBuilder) {
+    var p = {};
+    p.q = keyword;
+    if (paramsBuilder) {
+        p = paramsBuilder(p);
+    }
+    IO.httpGet('https://www.googleapis.com/customsearch/v1?', p, callback);
+};
+
 IO.jsonp = function (opts) {
     opts.data = opts.data || {};
     opts.jsonpName = opts.jsonpName || 'jsonp';

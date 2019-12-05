@@ -16,12 +16,12 @@ module.exports = function (bot) {
         name: 'die',
         fun: function () {
             if (bot.stopped) {
-                return 'Kill me once, shame on you, kill me twice...';
+                return '!@#$qwe123ZXCKill me once, shame on you, kill me twice...';
             }
 
             bot.stop();
 
-            return 'You killed me!';
+            return '!@#$qwe123ZXCYou killed me! I\'ll be back and revenge!!';
         },
         permissions: { del: 'NONE', use: 'OWNER' },
         description: 'Kills me :('

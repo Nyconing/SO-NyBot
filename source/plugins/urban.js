@@ -80,7 +80,7 @@ module.exports = function (bot) {
         }
         function formatTag ($0, $1) {
             var href =
-            'http://urbandictionary.com/define.php?term=' +
+            'https://urbandictionary.com/define.php?term=' +
             encodeURIComponent($1);
 
             return args.link($0, href);

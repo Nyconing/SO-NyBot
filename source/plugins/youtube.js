@@ -4,33 +4,24 @@ module.exports = function (bot) {
         'I could not find such a video',
         'The Lords of YouTube did not find your query favorable'];
     function youtube (args, cb) {
-        bot.IO.jsonp.google(
-        args.toString() + ' site:youtube.com/watch', finishCall);
+        bot.IO.googleCSE(args, finishedLogic, (p)=>{
+            p.key = bot.config.googleApiKey;
+            p.cx = bot.config.googleSearchEngineId;
+            p.siteSearch = 'youtube.com/watch';
+            return p;
+        });
 
-        function finishCall (resp) {
-            if (resp.responseStatus !== 200) {
-                finish('Something went on fire; status ' + resp.responseStatus);
-                return;
-            }
-
-            var result = resp.responseData.results[0];
-            bot.log(result, '/youtube result');
-
-            if (!result) {
-                finish(nulls.random());
-            }
-            else {
-                finish(decodeURIComponent(result.url));
-            }
-        }
-
-        function finish (res) {
-            if (cb && cb.call) {
-                cb(res);
-            }
-            else {
-                args.directreply(res);
-            }
+        function finishedLogic(obj) {
+            var res = JSON.parse(obj);
+            if (res.items) {
+                if (res.items.length == 0) {
+                    args.directreply('Google Fu was unable to woooo-OOO-wahhh!');
+                    return;
+                }
+                args.directreply( res.items[0].link );
+            } else if (res.error)
+                args.directreply('Google Fu is rest, try again later');
+            else args.directreply('Google Fu was unable to woooo-OOO-wahhh!');
         }
     }
 

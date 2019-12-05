@@ -1,3 +1,5 @@
+const util = require('util');
+console.log(util);
 // 45678901234567890123456789012345678901234567890123456789012345678901234567890
 // small utility functions
 

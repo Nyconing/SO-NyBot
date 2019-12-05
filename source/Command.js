@@ -27,7 +27,7 @@ exports.Command = function (cmd) {
             else if (canDo === 'NONE') {
                 return false;
             }
-            else if (bot.isOwner(usrid)) {
+            else if (bot.isOwner(usrid) || usrid === bot.adapter.userid) {
                 return true;
             }
 

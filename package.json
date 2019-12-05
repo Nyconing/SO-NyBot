@@ -4,12 +4,14 @@
   "description": "A chatbot for StackOverflow.",
   "main": "run-headless.js",
   "dependencies": {
-    "chrome-remote-interface": "^0.24.3"
+    "chrome-remote-interface": "^0.28.0",
+    "npm": "^6.13.2"
   },
   "devDependencies": {
-    "browserify": "^13.0.0",
-    "eslint": "^2.8.0",
-    "uglify-js": "^2.4.15"
+    "browserify": "^16.5.0",
+    "eslint": "^6.7.2",
+    "uglify-js": "^3.7.1",
+    "util": "^0.12.1"
   },
   "scripts": {
     "lint": "eslint source",

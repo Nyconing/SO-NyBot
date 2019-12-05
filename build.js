@@ -2,7 +2,8 @@ var browserify = require('browserify'),
     uglify = require('uglify-js'),
 
     fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    util = require('util');
 
 // yer a wizard Caprica
 var wizard = browserify({
@@ -10,7 +11,7 @@ var wizard = browserify({
     paths: ['.', './source', './static']
 });
 
-wizard.add('util.js');
+wizard.add('myutil.js');
 wizard.add('bot.js');
 
 var plugins = getJSFiles('source/plugins'),
@@ -40,8 +41,8 @@ wizard.bundle((err, buff) => {
     });
 
     fs.unlink('source/' + pluginLoaderPath, function(err) {
-        if( err ) {
-            console.error('Oh noes!')
+        if (err) {
+            console.error('Oh noes!');
             console.error(err);
         }
     });

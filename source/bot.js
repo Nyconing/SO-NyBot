@@ -53,13 +53,14 @@ var bot = window.bot = {
 
         try {
             // it wants to execute some code
-            if (/^c?>/.test(msg)) {
-                this.prettyEval(msg.toString(), msg.directreply.bind(msg));
-            }
+            //if (/^c?>/.test(msg)) {
+            //    this.prettyEval(msg.toString(), msg.directreply.bind(msg));
+            //}
             // or maybe some other action.
-            else {
-                this.invokeAction(msg);
-            }
+            //else {
+            //    this.invokeAction(msg);
+            //}
+            this.invokeAction(msg);
         }
         catch (e) {
             var err = 'Could not process input. Error: ' + e.message;
@@ -85,12 +86,12 @@ var bot = window.bot = {
     // the input. if the input begins with a command name, it's assumed to be a
     // command. otherwise, it tries matching against the listener.
     invokeAction: function (msg) {
-        var possibleName = msg.trim().replace(/^\/\s*/, '').split(' ')[0],
-            cmd = this.getCommand(possibleName),
+        var possibleName = msg.trim().replace(/^\/\s*/, '').split(' ')[0];
+        var cmd = (possibleName.startsWith('>') || possibleName.startsWith('+')|| possibleName.startsWith('=')) ? this.getCommand('evalcs') : this.getCommand(possibleName);
 
-            // this is the best name I could come up with
-            // messages beginning with / want to specifically invoke a command
-            coolnessFlag = msg.startsWith('/') ? !cmd.error : true;
+        // this is the best name I could come up with
+        // messages beginning with / want to specifically invoke a command
+        var coolnessFlag = msg.startsWith('/') ? !cmd.error : true;
 
         if (!cmd.error) {
             this.execCommand(cmd, msg);
@@ -104,7 +105,7 @@ var bot = window.bot = {
             return;
         }
 
-        msg.reply(this.giveUpMessage(cmd.guesses));
+        msg.directreply(this.giveUpMessage(cmd.guesses));
     },
 
     giveUpMessage: function (guesses) {
@@ -115,7 +116,7 @@ var bot = window.bot = {
         }
         // mmmm....nachos
         else {
-            errMsg += ' Use the `!!/help` command to learn more.';
+            errMsg += 'https://cdn.discordapp.com/attachments/496322396928868376/644853790733762570/unknown.png';
         }
         // wait a minute, these aren't nachos. these are bear cubs.
         return errMsg;
@@ -134,7 +135,7 @@ var bot = window.bot = {
         }
 
         var args = this.Message(
-            msg.replace(/^\/\s*/, '').slice(cmd.name.length).trim(),
+            msg.replace(/^\/\s*/, '').slice(cmd.name === 'evalcs' ? 0 : cmd.name.length).trim(),
             msg.get()
         ),
             // it always amazed me how, in dynamic systems, the trigger of the
@@ -173,7 +174,7 @@ var bot = window.bot = {
         }
 
         // make sure we don't process our own messages,
-        return msgObj.user_id !== bot.adapter.userid &&
+        return msgObj.user_id !== 1 &&
             // make sure we don't process Feeds
             msgObj.user_id > 0 &&
             // and the message begins with the invocation pattern
@@ -265,7 +266,7 @@ var bot = window.bot = {
         this.stopped = this.adapter.out.stopped = true;
     },
     continue: function () {
-        this.stopped = false;
+        this.stopped = this.adapter.out.stopped = false;
     },
 
     devMode: false,
@@ -305,6 +306,7 @@ bot.parseCommandArgs = argParser.parse.bind(argParser);
 bot.parseMacro = require('./parseMacro').parseMacro;
 bot.personality = require('./personality')(bot);
 
+// noinspection JSAnnotator
 bot.eval = require('./eval').eval;
 bot.prettyEval = require('./eval').prettyEval;
 
