@@ -73,7 +73,7 @@ module.exports = function (bot) {
             } else {
                 ret = str;
             }
-            ret = ret.replace(/!~/g, '#!~');
+            ret = ret.replace(/!~/g, '·!~');
             if (!ret.includes('\n')) {
                 ret = '`' + ret + '`';
             } else {

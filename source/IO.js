@@ -315,7 +315,7 @@ IO.httpGet = function (url, params, callback) {
             callback(xmlHttp.responseText);
     };
     // true for asynchronous
-    xmlHttp.open('GET', url + encodeQueryData(params), true);
+    xmlHttp.open('GET', (url.endsWith('?') ? url : url + '?') + encodeQueryData(params), true);
     xmlHttp.send(null);
 
     function encodeQueryData(data) {
