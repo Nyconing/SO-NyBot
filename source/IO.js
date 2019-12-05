@@ -315,7 +315,9 @@ IO.httpGet = function (url, params, callback) {
             callback(xmlHttp.responseText);
     };
     // true for asynchronous
-    xmlHttp.open('GET', (url.endsWith('?') ? url : url + '?') + encodeQueryData(params), true);
+    var p = encodeQueryData(params);
+    if (!isEmpty(p)) url = url.endsWith('?') ? url : url + '?';
+    xmlHttp.open('GET', url + p, true);
     xmlHttp.send(null);
 
     function encodeQueryData(data) {
@@ -323,6 +325,9 @@ IO.httpGet = function (url, params, callback) {
         for (let d in data)
             ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
         return ret.join('&');
+    }
+    function isEmpty(str) {
+        return (!str || 0 === str.length);
     }
 };
 

@@ -1,6 +1,4 @@
-// TODO why do we have this?
 module.exports = function (bot) {
-
     function imdb (args, cb) {
         bot.IO.googleCSE(args, finishedLogic, (p)=>{
             p.key = bot.config.googleApiKey;
