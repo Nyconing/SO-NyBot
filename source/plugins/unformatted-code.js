@@ -34,7 +34,7 @@ module.exports = function (bot) {
             return;
         }
 
-        var content = bot.adapter.in.breakMultilineMessage(msgObj.content)
+        var content = bot.breakMultilineMessage(msgObj.content)
             .map(function (line) {
                 // for some reason, chat adds a space prefix for every line...
                 return line.replace(/^ /, '');

@@ -53,7 +53,7 @@ var bot = window.bot = {
         }
 
         try {
-            this.invokeAction(msg,msgObj);
+            this.invokeAction(msg, msgObj);
         }
         catch (e) {
             var err = 'Could not process input. Error: ' + e.message;
@@ -79,21 +79,21 @@ var bot = window.bot = {
     // the input. if the input begins with a command name, it's assumed to be a
     // command. otherwise, it tries matching against the listener.
     invokeAction: function (msg, msgObj) {
-        var possibleName = this.removePattern(msg.content.startsWith('<div class=\'full\'>') ? this.breakMultilineMessage(msg.content)[0] : msg.content).trim().replace(/^\/\s*/, '').split(' ')[0];
+        var possibleName = this.removePattern(this.isMultiLines(msg.content) ? this.breakMultilineMessage(msg.content)[0] : msg.content).trim().replace(/^\/\s*/, '').split(' ')[0];
         var cmd = (possibleName.startsWith('>') || possibleName.startsWith('+') || possibleName.startsWith('=')) ? this.getCommand('evalcs') : this.getCommand(possibleName);
 
         // this is the best name I could come up with
         // messages beginning with / want to specifically invoke a command
         var coolnessFlag = msg.startsWith('/') ? !cmd.error : true;
         if (!cmd.error) {
-            if (msg.content.startsWith('<div class=\'full\'>')) {
+            if (this.isMultiLines(msg.content)) {
                 if (cmd.multilines) {
-                    this.execCommand(cmd, this.Message( this.removePattern(this.breakMultilineMessage(msg.content).join('\n')), msgObj));
+                    this.execCommand(cmd, this.Message(this.removePattern(this.breakMultilineMessage(msg.content).join('\n')), msgObj));
                 } else {
-                    this.execCommand(cmd, this.Message( this.removePattern(this.breakMultilineMessage(msg.content).join(' ')), msgObj));
+                    this.execCommand(cmd, this.Message(this.removePattern(this.breakMultilineMessage(msg.content).join(' ')), msgObj));
                 }
             } else {
-                this.execCommand(cmd, this.Message( this.removePattern(msg.content), msgObj));
+                this.execCommand(cmd, this.Message(this.removePattern(msg.content), msgObj));
             }
         }
         else if (coolnessFlag) {
@@ -107,17 +107,45 @@ var bot = window.bot = {
 
         msg.directreply(this.giveUpMessage(cmd.guesses));
     },
-    breakMultilineMessage: function (content) {
-        // remove the enclosing tag
-        var multiline = content
-        // slice upto the beginning of the ending tag
-            .slice(0, content.lastIndexOf('</div>'))
-            // and strip away the beginning tag
-            .replace('<div class=\'full\'>', '');
-
-        return multiline.split('<br>');
+    isMultiLines: function (content) {
+        return content.startsWith('<div class=\'full\'>') || content.startsWith('<pre class=\'full\'>') || content.startsWith('<code>')
     },
-    removePattern: function(msg) {
+    breakMultilineMessage: function (content) {
+        if (content.startsWith('<div class=\'full\'>')) {
+            return content
+            // slice upto the beginning of the ending tag
+                .slice(0, content.lastIndexOf('</div>'))
+                // and strip away the beginning tag
+                .replace('<div class=\'full\'>', '')
+                //split newline
+                .split('<br>');
+        } else if (content.startsWith('<pre class=\'full\'>')) {
+            return content
+            // slice upto the beginning of the ending tag
+                .slice(0, content.lastIndexOf('</pre>'))
+                // and strip away the beginning tag
+                .replace('<pre class=\'full\'>', '')
+                //split newline
+                .split('<br>');
+        } else if (content.startsWith('<code>')) {
+            return content
+            // slice upto the beginning of the ending tag
+                .slice(0, content.lastIndexOf('</code>'))
+                // and strip away the beginning tag
+                .replace('<code>', '')
+                //split newline
+                .split('<br>');
+        } else {
+            //are you kidding me?
+            return content;
+        }
+    },
+    removePattern: function (content) {
+        // decode markdown and html entities.
+        // #150
+        var msg = IO.htmlToMarkdown(content);
+        msg = IO.decodehtmlEntities(msg);
+        msg = (msg.startsWith('`') && msg.endsWith('`')) ? msg.slice(1, msg.length - 1) : msg;
         msg = msg.startsWith(this.config.pattern) ? msg.slice(this.config.pattern.length) : msg;
         return msg;
     },
@@ -150,7 +178,7 @@ var bot = window.bot = {
         var args = this.Message(
             msg.replace(/^\/\s*/, '').slice(cmd.name === 'evalcs' ? 0 : cmd.name.length).trim(),
             msg.get()
-        ),
+            ),
             // it always amazed me how, in dynamic systems, the trigger of the
             // actions is always a small, nearly unidentifiable line
             // this line right here activates a command
@@ -164,19 +192,15 @@ var bot = window.bot = {
     prepareMessage: function (msgObj) {
         msgObj = this.adapter.transform(msgObj);
 
-        // decode markdown and html entities.
-        // #150
-        var msg = IO.htmlToMarkdown(msgObj.content);
-        msg = IO.decodehtmlEntities(msg);
-
+        var msg = msgObj.content;
         // fixes issues #87 and #90 globally
         msg = msg.replace(/\u200b|\u200c/g, '');
 
-        return this.Message( msg.trim(), msgObj);
+        return this.Message(msg.trim(), msgObj);
     },
 
     validateMessage: function (msgObj) {
-        var msg = msgObj.content.startsWith('<div class=\'full\'>')? this.breakMultilineMessage(msgObj.content)[0].trim() :msgObj.content.trim();
+        var msg = this.isMultiLines(msgObj.content) ? this.breakMultilineMessage(msgObj.content)[0].trim() : msgObj.content.trim();
 
         // make sure we don't process our own messages,
         return msgObj.user_id !== 1 &&
@@ -221,7 +245,7 @@ var bot = window.bot = {
             msg += ' Did you mean: ' + guesses.join(', ');
         }
 
-        return { error: msg, guesses: guesses };
+        return {error: msg, guesses: guesses};
     },
 
     // the function women think is lacking in men
@@ -241,7 +265,7 @@ var bot = window.bot = {
     },
 
     callListeners: function (msg) {
-        function callListener (listener) {
+        function callListener(listener) {
             var match = msg.exec(listener.pattern), resp;
 
             if (match) {
