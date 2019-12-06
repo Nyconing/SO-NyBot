@@ -147,8 +147,6 @@ var bot = window.bot = {
             return;
         }
 
-        //if (bot.botVersion )
-
         var args = this.Message(
             msg.replace(/^\/\s*/, '').slice(cmd.name === 'evalcs' ? 0 : cmd.name.length).trim(),
             msg.get()

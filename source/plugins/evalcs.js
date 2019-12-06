@@ -92,7 +92,8 @@ module.exports = function (bot) {
             use: 'ALL'
         },
         description: 'C# Eval.',
-        async: true
+        async: true,
+        multilines: true
     });
 
 };
