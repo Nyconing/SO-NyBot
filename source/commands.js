@@ -16,9 +16,7 @@ module.exports = function (bot) {
                 return args + ': ' + desc;
             }
 
-            return 'Information on interacting with me can be found at ' +
-                '[this page](https://github.com/Zirak/SO-ChatBot/' +
-                'wiki/Interacting-with-the-bot)';
+            return bot.config.helpText;
         },
 
         listen: function (msg) {

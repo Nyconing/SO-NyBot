@@ -3,8 +3,8 @@
 node_modules/
 data/
 *.jar
-master.js
-master.min.js
+/master.js
+/master.min.js
 
 # ignore local config files; only commit ones with .SAMPLE
 *.config.json

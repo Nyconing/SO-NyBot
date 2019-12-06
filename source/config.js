@@ -13,6 +13,7 @@ module.exports = function (bot) {
             //githubToken: ''
             googleApiKey: '',
             googleSearchEngineId: '',
+            helpText: 'This bot\'s master is lazy. He didn\'t even config me properly ',
         },
         bot.memory.get('config', {})
     );
