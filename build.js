@@ -1,5 +1,5 @@
 var browserify = require('browserify'),
-    uglify = require('uglify-js'),
+    minify  = require('babel-minify'),
 
     fs = require('fs'),
     path = require('path'),
@@ -34,7 +34,7 @@ wizard.bundle((err, buff) => {
     });
 
     console.log('minifying...');
-    var minified = uglify.minify(buff.toString('utf8'), { fromString: true });
+    var minified = minify(buff.toString('utf8'), {  });
     console.log('Minified. Writing master.min.js...');
     fs.writeFile('master.min.js', minified.code, function() {
         console.log('wrote master.min.js');
