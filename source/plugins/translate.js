@@ -112,7 +112,7 @@ module.exports = function (bot) {
             msg.directreply(
                 result.text + '\n' +
                 '·from ' + langs[result.from.language.iso.toLowerCase()] +
-                (result.from.text.didYouMean ? '\n·with a correction: ' + new DOMParser().parseFromString('<p1>'+result.from.text.value+'</p1>','text/xml').firstChild.innerHTML.replace(/<[^\/>]*>/g, '[').replace(/<[\/][^>]*>/g, ']') : '')
+                (result.from.text.didYouMean || result.from.text.autoCorrected ? '\n·with a correction: ' + new DOMParser().parseFromString('<p1>'+result.from.text.value+'</p1>','text/xml').firstChild.innerHTML.replace(/<[^\/>]*>/g, '[').replace(/<[\/][^>]*>/g, ']') : '')
             );
         });
     }
