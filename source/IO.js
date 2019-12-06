@@ -340,6 +340,18 @@ IO.googleCSE = function (keyword, callback, paramsBuilder) {
     IO.httpGet('https://www.googleapis.com/customsearch/v1?', p, callback);
 };
 
+IO.fetchFullTranscript = function (msgObj) {
+    return new Promise((resolve, reject) => {
+        try {
+            IO.httpGet('https://chat.stackoverflow.com/messages/' + msgObj.room_id + '/' + msgObj.message_id, {}, (result) => {
+                resolve(result);
+            });
+        }catch (e) {
+            reject(e);
+        }
+    });
+};
+
 IO.jsonp = function (opts) {
     opts.data = opts.data || {};
     opts.jsonpName = opts.jsonpName || 'jsonp';

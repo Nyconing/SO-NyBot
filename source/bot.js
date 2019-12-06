@@ -79,6 +79,11 @@ var bot = window.bot = {
     // the input. if the input begins with a command name, it's assumed to be a
     // command. otherwise, it tries matching against the listener.
     invokeAction: function (msg, msgObj) {
+        if (this.isPartial(msg.content)){
+            console.log('parse partial');
+            this.invokePartialMessage(msg, msgObj);
+            return;
+        }
         var possibleName = this.removePattern(this.isMultiLines(msg.content) ? this.breakMultilineMessage(msg.content)[0] : msg.content).trim().replace(/^\/\s*/, '').split(' ')[0];
         var cmd = (possibleName.startsWith('>') || possibleName.startsWith('+') || possibleName.startsWith('=')) ? this.getCommand('evalcs') : this.getCommand(possibleName);
 
@@ -107,8 +112,16 @@ var bot = window.bot = {
 
         msg.directreply(this.giveUpMessage(cmd.guesses));
     },
+    isPartial: function(content){
+        return content.startsWith('<pre class=\'partial\'>');
+    },
+    invokePartialMessage:function(msg, msgObj) {
+        IO.fetchFullTranscript(msgObj).then((result => {
+            this.invokeAction(this.Message(result.trim(), msgObj), msgObj);
+        }));
+    },
     isMultiLines: function (content) {
-        return content.startsWith('<div class=\'full\'>') || content.startsWith('<pre class=\'full\'>') || content.startsWith('<code>')
+        return content.startsWith('<div class=\'full\'>') || content.startsWith('<pre class=\'full\'>') || content.startsWith('<pre class=\'partial\'>') || content.startsWith('<code>')
     },
     breakMultilineMessage: function (content) {
         if (content.startsWith('<div class=\'full\'>')) {
@@ -125,6 +138,14 @@ var bot = window.bot = {
                 .slice(0, content.lastIndexOf('</pre>'))
                 // and strip away the beginning tag
                 .replace('<pre class=\'full\'>', '')
+                //split newline
+                .split('<br>');
+        }else if (content.startsWith('<pre class=\'partial\'>')) {
+            return content
+            // slice upto the beginning of the ending tag
+                .slice(0, content.lastIndexOf('</pre>'))
+                // and strip away the beginning tag
+                .replace('<pre class=\'partial\'>', '')
                 //split newline
                 .split('<br>');
         } else if (content.startsWith('<code>')) {
