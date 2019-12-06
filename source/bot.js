@@ -5,6 +5,7 @@ var SuggestionDictionary = require('./suggestionDict').SuggestionDictionary;
 var IO = require('./IO');
 
 var bot = window.bot = {
+    botVersion: 1.00,
     IO: IO,
 
     Command: require('./Command').Command,
@@ -52,15 +53,7 @@ var bot = window.bot = {
         }
 
         try {
-            // it wants to execute some code
-            //if (/^c?>/.test(msg)) {
-            //    this.prettyEval(msg.toString(), msg.directreply.bind(msg));
-            //}
-            // or maybe some other action.
-            //else {
-            //    this.invokeAction(msg);
-            //}
-            this.invokeAction(msg);
+            this.invokeAction(msg,msgObj);
         }
         catch (e) {
             var err = 'Could not process input. Error: ' + e.message;
@@ -85,16 +78,23 @@ var bot = window.bot = {
     // this conditionally calls execCommand or callListeners, depending on what
     // the input. if the input begins with a command name, it's assumed to be a
     // command. otherwise, it tries matching against the listener.
-    invokeAction: function (msg) {
-        var possibleName = msg.trim().replace(/^\/\s*/, '').split(' ')[0];
-        var cmd = (possibleName.startsWith('>') || possibleName.startsWith('+')|| possibleName.startsWith('=')) ? this.getCommand('evalcs') : this.getCommand(possibleName);
+    invokeAction: function (msg, msgObj) {
+        var possibleName = this.removePattern(msg.content.startsWith('<div class=\'full\'>') ? this.breakMultilineMessage(msg.content)[0] : msg.content).trim().replace(/^\/\s*/, '').split(' ')[0];
+        var cmd = (possibleName.startsWith('>') || possibleName.startsWith('+') || possibleName.startsWith('=')) ? this.getCommand('evalcs') : this.getCommand(possibleName);
 
         // this is the best name I could come up with
         // messages beginning with / want to specifically invoke a command
         var coolnessFlag = msg.startsWith('/') ? !cmd.error : true;
-
         if (!cmd.error) {
-            this.execCommand(cmd, msg);
+            if (msg.content.startsWith('<div class=\'full\'>')) {
+                if (cmd.multilines) {
+                    this.execCommand(cmd, this.Message( this.removePattern(this.breakMultilineMessage(msg.content).join('\n')), msgObj));
+                } else {
+                    this.execCommand(cmd, this.Message( this.removePattern(this.breakMultilineMessage(msg.content).join(' ')), msgObj));
+                }
+            } else {
+                this.execCommand(cmd, this.Message( this.removePattern(msg.content), msgObj));
+            }
         }
         else if (coolnessFlag) {
             coolnessFlag = this.callListeners(msg);
@@ -107,10 +107,23 @@ var bot = window.bot = {
 
         msg.directreply(this.giveUpMessage(cmd.guesses));
     },
+    breakMultilineMessage: function (content) {
+        // remove the enclosing tag
+        var multiline = content
+        // slice upto the beginning of the ending tag
+            .slice(0, content.lastIndexOf('</div>'))
+            // and strip away the beginning tag
+            .replace('<div class=\'full\'>', '');
 
+        return multiline.split('<br>');
+    },
+    removePattern: function(msg) {
+        msg = msg.startsWith(this.config.pattern) ? msg.slice(this.config.pattern.length) : msg;
+        return msg;
+    },
     giveUpMessage: function (guesses) {
         // man, I can't believe it worked...room full of nachos for me
-        var errMsg = 'That didn\'t make much sense.';
+        var errMsg = '';
         if (guesses && guesses.length) {
             errMsg += ' Maybe you meant: ' + guesses.join(', ');
         }
@@ -133,6 +146,8 @@ var bot = window.bot = {
             ].random());
             return;
         }
+
+        //if (bot.botVersion )
 
         var args = this.Message(
             msg.replace(/^\/\s*/, '').slice(cmd.name === 'evalcs' ? 0 : cmd.name.length).trim(),
@@ -159,19 +174,11 @@ var bot = window.bot = {
         // fixes issues #87 and #90 globally
         msg = msg.replace(/\u200b|\u200c/g, '');
 
-        return this.Message(
-            msg.slice(this.config.pattern.length).trim(),
-            msgObj);
+        return this.Message( msg.trim(), msgObj);
     },
 
     validateMessage: function (msgObj) {
-        var msg = msgObj.content.trim();
-
-        // a bit js bot specific...make sure it isn't just !!! all round. #139
-        if (this.config.pattern === '!!' && (/^!!!+$/).test(msg)) {
-            bot.log('special skip');
-            return false;
-        }
+        var msg = msgObj.content.startsWith('<div class=\'full\'>')? this.breakMultilineMessage(msgObj.content)[0].trim() :msgObj.content.trim();
 
         // make sure we don't process our own messages,
         return msgObj.user_id !== 1 &&
@@ -199,7 +206,6 @@ var bot = window.bot = {
     // otherwise, it returns an object with an error message property
     getCommand: function (cmdName) {
         var lowerName = cmdName.toLowerCase();
-
         if (this.commandExists(lowerName)) {
             return this.commands[lowerName];
         }

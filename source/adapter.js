@@ -372,51 +372,8 @@ var input = {
         else if (et !== 1 && et !== 2) {
             return;
         }
-
-        // check for a multiline message
-        if (msg.content.startsWith('<div class=\'full\'>')) {
-            this.handleMultilineMessage(msg);
-            return;
-        }
-
         // add the message to the input buffer
         IO.in.receive(msg);
-    },
-
-    handleMultilineMessage: function (msg) {
-        this.breakMultilineMessage(msg.content).forEach(function (line) {
-            var msgObj = Object.merge(msg, { content: line.trim() });
-
-            IO.in.receive(msgObj);
-        });
-
-
-        let lines = this.breakMultilineMessage(msg.content);
-        // supports multilines on eval
-        if (lines[0].startsWith(window.bot.config.pattern + '&gt;')||lines[0].startsWith(window.bot.config.pattern + '+')||lines[0].startsWith(window.bot.config.pattern + '=')) {
-            var msgObj = Object.merge(msg, {
-                content: lines.join('\n')
-            });
-            IO.in.receive(msgObj);
-        } else {
-            lines.forEach(function (line) {
-                var msgObj = Object.merge(msg, {
-                    content: line.trim()
-                });
-
-                IO.in.receive(msgObj);
-            });
-        }
-    },
-    breakMultilineMessage: function (content) {
-        // remove the enclosing tag
-        var multiline = content
-            // slice upto the beginning of the ending tag
-            .slice(0, content.lastIndexOf('</div>'))
-            // and strip away the beginning tag
-            .replace('<div class=\'full\'>', '');
-
-        return multiline.split('<br>');
     },
 
     handleUserEvent: function (msg) {

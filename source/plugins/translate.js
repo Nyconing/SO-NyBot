@@ -126,7 +126,8 @@ module.exports = function (bot) {
             use: 'ALL'
         },
         description: 'Languages Translator.',
-        async: true
+        async: true,
+        multilines: true
     });
 
     //libs
