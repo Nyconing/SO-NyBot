@@ -14,6 +14,7 @@ module.exports = function (bot) {
             googleApiKey: '',
             googleSearchEngineId: '',
             helpText: 'This bot\'s master is lazy. He didn\'t even config me properly ',
+            botName: 'NyBot'
         },
         bot.memory.get('config', {})
     );

@@ -111,7 +111,7 @@ module.exports = function (bot) {
     };
 
     commands.listcommands = (function () {
-        function getSortedCommands() {
+        function getSortedCommands(args) {
             // well, sort of sorted. we want to sort the commands, but have the
             // built-ins be in front, with help as the first one. #153
             var commandNames = Object.keys(bot.commands);
@@ -127,11 +127,54 @@ module.exports = function (bot) {
             var helpIndex = sortedCommands.indexOf('help');
             sortedCommands.unshift(sortedCommands.splice(helpIndex, 1)[0]);
 
-            return sortedCommands;
+            var cmds = sortedCommands.map((name) => {
+                return bot.commands[name]
+            });
+            var cmdsPublic = cmds.filter((cmd) => {
+                return cmd.permissions.use === 'ALL'
+            });
+            var cmdsMods = cmds.filter((cmd) => {
+                return !cmdsPublic.includes(cmd)
+            });
+            var spacing = function (text) {
+                var r = 12 - text.length;
+                return r >= 0 ? r : 0;
+            };
+            var slicing = function(text) {
+                var t = text.slice(0, 68);
+                if (text.length > 68) {
+                    t += '\n' + ' '.repeat(14) + text.slice(68, 68 * 2);
+                }
+                if (text.length > 68 * 2) {
+                    t += '\n' + ' '.repeat(14) + text.slice(68 * 2, 68 * 3);
+                }
+                if (text.length > 68 * 3) {
+                    t += '\n' + ' '.repeat(14) + text.slice(68 * 3, 68 * 4);
+                }
+                if (text.length > 68 * 4) {
+                    t += '\n' + ' '.repeat(14) + '(who creates this command with super long desc?)'
+                }
+                return t;
+            };
+
+            var t = ('I\'m ' + bot.config.botName + '. You can utilize me with following commands:' +
+                "\n\nModeration commands:\n" +
+                cmdsMods.map((cmd) => {
+                    return '·' + cmd.name + ' '.repeat(spacing(cmd.name) + 1) + slicing(cmd.description)
+                }).join('\n') +
+                "\n\nPublic commands:\n" +
+                cmdsPublic.map((cmd) => {
+                    return '·' + cmd.name + ' '.repeat(spacing(cmd.name) + 1) + slicing(cmd.description)
+                }).join('\n')
+            ).split('\n').map((line) => {
+                return '    ' + line
+            }).join('\n');
+            console.log(t)
+            args.directreply(t);
         }
 
         return function (args) {
-            return args.stringifyGiantArray(getSortedCommands());
+            return getSortedCommands(args);
         };
     })();
 
