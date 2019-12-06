@@ -75,14 +75,13 @@ module.exports = function (bot) {
         function formatTop (top) {
             // replace [tag] in definition with links
             var def = top.definition.replace(/\[([^\]]+)\]/g, formatTag);
-
             return args.link(top.word, top.permalink) + ' ' + def;
         }
+
         function formatTag ($0, $1) {
             var href =
             'https://urbandictionary.com/define.php?term=' +
             encodeURIComponent($1);
-
             return args.link($0, href);
         }
     }
