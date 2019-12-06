@@ -492,7 +492,8 @@ var output = {
         // the freezer and never let it out. not until it can talk again. what
         // was I intending to say?
         if (!obj.text.includes(' !@#$qwe123ZXC')) {
-            if (this.stopped) {
+            if (!this.stopped) this.stopped = [0];
+            if (this.stopped.includes(obj.room)) {
                 // ah fuck it
                 return;
             }

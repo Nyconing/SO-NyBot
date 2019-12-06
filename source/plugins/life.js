@@ -1,11 +1,11 @@
 module.exports = function (bot) {
     bot.addCommand({
         name: 'live',
-        fun: function () {
-            if (!bot.stopped) {
+        fun: function (args) {
+            if (!bot.isStopped(args.getRoomId())) {
                 return 'I\'m not dead! Honest!';
             }
-            bot.continue();
+            bot.continue(args.getRoomId());
             return 'And on this day, you shall paint eggs for a giant bunny.';
         },
         permissions: { del: 'NONE', use: 'OWNER' },
@@ -14,13 +14,11 @@ module.exports = function (bot) {
 
     bot.addCommand({
         name: 'die',
-        fun: function () {
-            if (bot.stopped) {
+        fun: function (args) {
+            if (bot.isStopped(args.getRoomId())) {
                 return '!@#$qwe123ZXCKill me once, shame on you, kill me twice...';
             }
-
-            bot.stop();
-
+            bot.stop(args.getRoomId());
             return '!@#$qwe123ZXCYou killed me! I\'ll be back and revenge!!';
         },
         permissions: { del: 'NONE', use: 'OWNER' },

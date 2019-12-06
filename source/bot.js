@@ -290,11 +290,18 @@ var bot = window.bot = {
 
     log: console.log.bind(console),
 
-    stop: function () {
-        this.stopped = this.adapter.out.stopped = true;
+    stop: function (room) {
+        this.stopped.push(room);
+        this.adapter.out.stopped.push(room);
     },
-    continue: function () {
-        this.stopped = this.adapter.out.stopped = false;
+    continue: function (room) {
+        this.stopped = this.stopped.slice(this.stopped.indexOf(room), 1);
+        this.adapter.out.stopped = this.adapter.out.stopped.slice(this.adapter.out.stopped.indexOf(room), 1);
+    },
+    isStopped: function(room){
+        if (!this.stopped) this.stopped = [0];
+        if (!this.adapter.out.stopped) this.adapter.out.stopped = [0];
+        return this.stopped.includes(room);
     },
 
     devMode: false,

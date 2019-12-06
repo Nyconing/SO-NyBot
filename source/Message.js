@@ -25,8 +25,11 @@ exports.Message = function (text, msgObj) {
         directsend:function (text){
             rawSend(text);
         },
-        userid: function(){
+        getUserId: function(){
             return msgObj.user_id;
+        },
+        getRoomId: function(){
+            return msgObj.room_id;
         },
 
         // parse() parses the original message
