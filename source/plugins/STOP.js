@@ -9,7 +9,7 @@ module.exports = function (bot) {
         SISTITE: 'MALLEUS TEMPUS!'
     };
 
-    bot.IO.registerListener(
+    bot.registerListener(
         {
             name: 'stop2',
             listening: ['stahp'],
@@ -20,7 +20,7 @@ module.exports = function (bot) {
             }
         }
     );
-    bot.IO.registerListener(
+    bot.registerListener(
         {
             name: 'stop3',
             listening: ['halt'],
@@ -31,7 +31,7 @@ module.exports = function (bot) {
             }
         }
     );
-    bot.IO.registerListener(
+    bot.registerListener(
         {
             name: 'stop4',
             listening: ['stoy'],
@@ -42,7 +42,7 @@ module.exports = function (bot) {
             }
         }
     );
-    bot.IO.registerListener(
+    bot.registerListener(
         {
             name: 'stop5',
             listening: ['SISTITE'],

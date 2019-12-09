@@ -240,6 +240,26 @@ var bot = window.bot = {
         this.commandDictionary.trie.add(cmd.name);
     },
 
+    registerListener: function(listener) {
+        // /(STOP|STAHP|...)[\.!\?]?$/
+        var reg = new RegExp(
+            '(' +
+            listener.listening.map((x) => {
+                return listener.caseSensitive ? x : x.toLowerCase()
+            }).map(RegExp.escape).join('|') +
+            ')[\\.!?]?$'
+        );
+        IO.register('input', function Meow(event) {
+            if (reg.exec(listener.caseSensitive ? event.content : event.content.toLowerCase())) {
+                if (!listener.cds) listener.cds = {};
+                if (!listener.cds[event.room_id]) listener.cds[event.room_id] = new Date().getTime() - 50;
+                if (listener.cds[event.room_id] < new Date().getTime()) {
+                    listener.response(bot.Message(event.content, event));
+                }
+                listener.cds[event.room_id] = new Date().getTime() + (listener.cooldown * 1000);
+            }
+        });
+    },
     // gee, I wonder what this will return?
     commandExists: function (cmdName) {
         return this.commands.hasOwnProperty(cmdName);
