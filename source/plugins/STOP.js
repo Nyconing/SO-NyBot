@@ -1,7 +1,7 @@
 module.exports = function (bot) {
     'use strict';
 
-    var hammers = {
+    var oldHammers = {
         STOP: 'HAMMERTIME!',
         STAHP: 'HAMMAHTIME!',
         HALT: 'HAMMERZEIT!',
@@ -9,27 +9,49 @@ module.exports = function (bot) {
         SISTITE: 'MALLEUS TEMPUS!'
     };
 
-    // /(STOP|STAHP|...)[\.!\?]?$/
-    var re = new RegExp(
-        '(' +
-        Object.keys(hammers).map(RegExp.escape).join('|') +
-        ')[\\.!?]?$'
-    );
-
-    bot.IO.register('input', function STOP(event) {
-
-        var sentence = event.content.toUpperCase(),
-            res = re.exec(sentence);
-
-        if (res) {
-            if (!bot.adapter.hammerTime) {
-                bot.adapter.hammerTime = new Date().getTime() - 50;
+    bot.IO.registerListener(
+        {
+            name: 'stop2',
+            listening: ['stahp'],
+            caseSensitive: false,
+            cooldown: 60 * 5,
+            response: (message) => {
+                message.directSend('HAMMAHTIME!');
             }
-            if (bot.adapter.hammerTime < new Date().getTime()) {
-                bot.adapter.out.add(hammers[res[1]], event.room_id);
-            }
-            bot.adapter.hammerTime = new Date().getTime() + (120 * 1000);
         }
-    });
+    );
+    bot.IO.registerListener(
+        {
+            name: 'stop3',
+            listening: ['halt'],
+            caseSensitive: false,
+            cooldown: 60 * 5,
+            response: (message) => {
+                message.directSend('HAMMERZEIT!');
+            }
+        }
+    );
+    bot.IO.registerListener(
+        {
+            name: 'stop4',
+            listening: ['stoy'],
+            caseSensitive: false,
+            cooldown: 60 * 5,
+            response: (message) => {
+                message.directSend('ZABIVAT\' VREMYA!');
+            }
+        }
+    );
+    bot.IO.registerListener(
+        {
+            name: 'stop5',
+            listening: ['SISTITE'],
+            caseSensitive: false,
+            cooldown: 60 * 5,
+            response: (message) => {
+                message.directSend('MALLEUS TEMPUS!');
+            }
+        }
+    );
 
 };

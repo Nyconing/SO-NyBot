@@ -5,9 +5,49 @@ This is a child from Zirak's SO-ChatBot mother. For more info, on how to use the
 The plugin will runs when the bot initialize, you can use the following modes as your **plugin bootstrap**, it was a common used modes.
 
 1. Command Mode
+```javascript
+module.exports = function (bot) {
+    bot.addCommand({
+        name: 'papaya',
+        description: 'Papaya API',
+        permissions: {del: 'NONE', use: 'ALL'},
+        async: true,
+        fun: (message) => {
+            message.directReply('Papaya on the action');
+        }
+    });
+};
+```
 2. Listening Mode
+```javascript
+module.exports = function (bot) {
+    bot.IO.registerListener(
+        {
+            name: 'stop',
+            listening: ['stahp'],
+            caseSensitive: false,
+            cooldown: 60 * 5,
+            response: (message) => {
+                message.directSend('H A M M A H T I M E !');
+            }
+        }
+    );
+};
+```
 
 **API Documentation**:
+
+`bot.addCommand` : `function(command):void` Add a command into bot.
+
+- string `name` : Command name.
+- string `description` : Command description. Please be short and clear.
+- object `permissions` : Permitted user group. example: `{del:'NONE',use:'ALL'}`
+  - string `del` : Able to delete. `'NONE'`/`'ALL'`/`'OWNER'`
+  - string `use` : Able to use. `'NONE'`/`'ALL'`/`'OWNER'`
+- boolean `async` : Can be asynchronous.
+- function `fun` : A command entry point. example: `(message)=>{ message.directReply('Hello'); }`
+  - param `message` 
+
 
 object `event` : An event obtained from adapter. It just was an object that holds data, no functions inside.
 
@@ -27,14 +67,14 @@ object `message` : An object contains parsed message from invoker, and some usef
 - `get` : `getter` 
   - A parsed message, using like string `let text = message` 
   - The message is parsed, without pattern and command name.
-  - The message was a `full` message when `command.multilines` was true, else it was `partial`.
+  - The message was a `full` message when `command.multilines` was true, else it might `partial`.
 - `send` : `function(text):void` 
   - Sending the `text` to the room. 
 - `reply` : `function(text, userName):void` / `function(text):void`
   - Sending the `text` to the room, with ping to the `userName`.
   - invoker user will be used when `userName` was not provided.
 - `directSend` : `function(text):void`
-  - Sending the `text` to the room.
+  - Sending the `text` to the room. (same as `send`)
 - `directReply` : `function(text):void`
   - Sending the `text` to the room, with reply to the invoker message.
 - `getEvent` : `function():event`
