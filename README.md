@@ -25,7 +25,7 @@ module.exports = function (bot) {
 ##### 2. Listening Mode
 ```javascript
 module.exports = function (bot) {
-    bot.IO.registerListener({
+    bot.registerListener({
             name: 'stop',
             listening: ['stahp'],
             caseSensitive: false,
@@ -52,6 +52,18 @@ Add a command into bot.
   - param `message` 
 
 ·
+
+#### `bot.registerListener` : `function(listener):void` 
+Add a listener into bot.
+
+- string `name` : Listener name.
+- string[] `listening` : Listening sentences.
+- boolean `caseSensitive` : Is listens case-sensitive..
+- number `cooldown` : Cool down time inside room, in seconds.
+- function `response` : This will called when sentences matched, example: `(message)=>{ message.directReply('Hello'); }`
+  - param `message` 
+
+## Objects
 
 #### The `event` object
 An event obtained from adapter. It just was an object that holds data, no functions inside.
