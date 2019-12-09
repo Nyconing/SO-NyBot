@@ -1,10 +1,14 @@
+# NyBot
+
 This is a child from Zirak's SO-ChatBot mother. For more info, on how to use the bot, see [here](https://github.com/Zirak/SO-ChatBot).
 
-**Plugin Documentation**:
+> Build: `run build`
+
+## Plugin Documentation:
 
 The plugin will runs when the bot initialize, you can use the following modes as your **plugin bootstrap**, it was a common used modes.
 
-1. Command Mode
+##### 1. Command Mode
 ```javascript
 module.exports = function (bot) {
     bot.addCommand({
@@ -18,11 +22,10 @@ module.exports = function (bot) {
     });
 };
 ```
-2. Listening Mode
+##### 2. Listening Mode
 ```javascript
 module.exports = function (bot) {
-    bot.IO.registerListener(
-        {
+    bot.IO.registerListener({
             name: 'stop',
             listening: ['stahp'],
             caseSensitive: false,
@@ -30,14 +33,14 @@ module.exports = function (bot) {
             response: (message) => {
                 message.directSend('H A M M A H T I M E !');
             }
-        }
-    );
+        });
 };
 ```
 
-**API Documentation**:
+## API Documentation:
 
-`bot.addCommand` : `function(command):void` Add a command into bot.
+#### `bot.addCommand` : `function(command):void` 
+Add a command into bot.
 
 - string `name` : Command name.
 - string `description` : Command description. Please be short and clear.
@@ -48,8 +51,10 @@ module.exports = function (bot) {
 - function `fun` : A command entry point. example: `(message)=>{ message.directReply('Hello'); }`
   - param `message` 
 
+·
 
-object `event` : An event obtained from adapter. It just was an object that holds data, no functions inside.
+#### The `event` object
+An event obtained from adapter. It just was an object that holds data, no functions inside.
 
 - string `content` : A raw text of message.
 - number `event_type` : Type of event.
@@ -62,24 +67,34 @@ object `event` : An event obtained from adapter. It just was an object that hold
 - string `user_name` : User name of sent message.
 - *more.. (some of them are only exists on some event)*
 
-object `message` : An object contains parsed message from invoker, and some useful functions that can be used the most.
+·
 
-- `get` : `getter` 
-  - A parsed message, using like string `let text = message` 
-  - The message is parsed, without pattern and command name.
-  - The message was a `full` message when `command.multilines` was true, else it might `partial`.
-- `send` : `function(text):void` 
-  - Sending the `text` to the room. 
-- `reply` : `function(text, userName):void` / `function(text):void`
-  - Sending the `text` to the room, with ping to the `userName`.
-  - invoker user will be used when `userName` was not provided.
-- `directSend` : `function(text):void`
-  - Sending the `text` to the room. (same as `send`)
-- `directReply` : `function(text):void`
-  - Sending the `text` to the room, with reply to the invoker message.
-- `getEvent` : `function():event`
-  - Get the event of invoker message.
-- `getUserId` : `function():string`
-  - Get the User Id of invoker.
-- `getRoomId` : `function():string`
-  - Get the Room Id of invoker.
+#### The `message` object
+An object contains parsed message from invoker, and some useful functions that can be used the most.
+
+###### `get` : `getter` 
+- A parsed message, using like string `let text = message` 
+- The message is parsed, without pattern and command name.
+- The message was a `full` message when `command.multilines` was true, else it might `partial`.
+
+###### `send` : `function(text):void` 
+- Sending the `text` to the room. 
+
+###### `reply` : `function(text, userName):void` / `function(text):void`
+- Sending the `text` to the room, with ping to the `userName`.
+- invoker user will be used when `userName` was not provided.
+
+###### `directSend` : `function(text):void`
+- Sending the `text` to the room. (same as `send`)
+
+###### `directReply` : `function(text):void`
+- Sending the `text` to the room, with reply to the invoker message.
+
+###### `getEvent` : `function():event`
+- Get the event of invoker message.
+
+###### `getUserId` : `function():string`
+- Get the User Id of invoker.
+
+###### `getRoomId` : `function():string`
+- Get the Room Id of invoker.
