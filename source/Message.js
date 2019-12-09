@@ -13,7 +13,6 @@ exports.Message = function (text, msgObj) {
     };
     var deliciousObject = {
         send: rawSend,
-
         reply: function (resp, userName) {
             var prefix = bot.adapter.reply(userName || msgObj.user_name);
             rawSend(prefix + ' ' + resp);
@@ -22,8 +21,18 @@ exports.Message = function (text, msgObj) {
             var prefix = bot.adapter.directreply(msgObj.message_id);
             rawSend(resp.startsWith('    ') ? '    reply ' + msgObj.user_name + '\n' + resp : prefix + ' ' + resp);
         },
+        directReply: function (resp) {
+            var prefix = bot.adapter.directreply(msgObj.message_id);
+            rawSend(resp.startsWith('    ') ? '    reply ' + msgObj.user_name + '\n' + resp : prefix + ' ' + resp);
+        },
         directsend:function (text){
             rawSend(text);
+        },
+        directSend:function (text){
+            rawSend(text);
+        },
+        getEvent:function(){
+            return msgObj;
         },
         getUserId: function(){
             return msgObj.user_id;
@@ -31,7 +40,6 @@ exports.Message = function (text, msgObj) {
         getRoomId: function(){
             return msgObj.room_id;
         },
-
         // parse() parses the original message
         // parse( true ) also turns every match result to a Message
         // parse( msgToParse ) parses msgToParse
@@ -54,7 +62,6 @@ exports.Message = function (text, msgObj) {
                 return bot.Message(part, msgObj);
             });
         },
-
         // execute a regexp against the text, saving it inside the object
         exec: function (regexp) {
             var match = regexp.exec(text);
@@ -65,7 +72,6 @@ exports.Message = function (text, msgObj) {
 
         findUserId: bot.users.findUserId,
         findUsername: bot.users.findUsername,
-
         codify: bot.adapter.codify.bind(bot.adapter),
         escape: bot.adapter.escape.bind(bot.adapter),
         link: bot.adapter.link.bind(bot.adapter),
@@ -102,7 +108,6 @@ exports.Message = function (text, msgObj) {
 
             return partitioned.invoke('join', ', ').join('\n');
         },
-
         // retrieve a value from the original message object, or if no argument
         // provided, the msgObj itself
         get: function (what) {
