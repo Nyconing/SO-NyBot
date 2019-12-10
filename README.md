@@ -4,6 +4,8 @@ This is a child from Zirak's SO-ChatBot mother. For more info, on how to use the
 
 > Build: `run build`
 
+![WTFPL](https://github.com/Nyconing/SO-NyBot/tree/master/pics) WTFPL, GPL-compatible
+
 ## Plugin Documentation:
 
 The plugin will runs when the bot initialize, you can use the following modes as your **plugin bootstrap**, it was a common used modes.
