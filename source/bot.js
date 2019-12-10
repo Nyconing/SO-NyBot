@@ -3,6 +3,9 @@
 
 var SuggestionDictionary = require('./suggestionDict').SuggestionDictionary;
 var IO = require('./IO');
+String.prototype.cleanup = function() {
+    return this.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "-");
+};
 
 var bot = window.bot = {
     botVersion: 1.10,
