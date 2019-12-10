@@ -250,7 +250,7 @@ var bot = window.bot = {
             listener.listening.map((x) => {
                 return listener.caseSensitive ? x : x.toLowerCase()
             }).map((x) => {
-                return ' ' + x + ' ';
+                return  x;
             }).map(RegExp.escape).join('|') +
             ')[\\.!?]?'
         );

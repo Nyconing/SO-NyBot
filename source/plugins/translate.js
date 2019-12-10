@@ -1,7 +1,6 @@
-
 module.exports = function (bot) {
     function ev(msg, cb) {
-        translate()(msg).then((result) => {
+        bot.translate(msg).then((result) => {
             var langs = {
                 'auto': 'Automatic',
                 'af': 'Afrikaans',
@@ -5266,6 +5265,6 @@ module.exports = function (bot) {
     }
 
     //warm it up, so it served hot
-    translate();
+    bot.translate = translate();
     //const languages = __webpack_require__(/*! ./languages */ "./src/languages.js");
 };

@@ -40,7 +40,17 @@ exports.Message = function (text, msgObj) {
         getRoomId: function(){
             return msgObj.room_id;
         },
-
+        edit: function(text) {
+            bot.IO.xhr({
+                url: '/messages/' + msgObj.message_id,
+                data: fkey({
+                    text: text
+                }),
+                method: 'POST',
+                complete: function (resp, xhr) {
+                }
+            });
+        },
         // parse() parses the original message
         // parse( true ) also turns every match result to a Message
         // parse( msgToParse ) parses msgToParse
