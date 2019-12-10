@@ -5,6 +5,7 @@
   "main": "run-headless.js",
   "dependencies": {
     "chrome-remote-interface": "^0.28.0",
+    "node-wit": "^5.0.0",
     "npm": "^6.13.2"
   },
   "devDependencies": {
