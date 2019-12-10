@@ -4,7 +4,7 @@ This is a child from Zirak's SO-ChatBot mother. For more info, on how to use the
 
 > Build: `run build`
 
-![WTFPL](https://github.com/Nyconing/SO-NyBot/tree/master/pics) WTFPL, GPL-compatible
+![WTFPL](https://raw.githubusercontent.com/Nyconing/SO-NyBot/master/pics/wtfpl-badge-1.png)  `WTFPL, GPL-compatible`
 
 ## Plugin Documentation:
 
