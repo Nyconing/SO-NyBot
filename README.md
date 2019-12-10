@@ -2,7 +2,7 @@
 
 ![WTFPL](https://raw.githubusercontent.com/Nyconing/SO-NyBot/master/pics/wtfpl-badge-2.png)  `, GPL-compatible`
 
-This is a child from Zirak's SO-ChatBot mother. For more info, on how to use the bot, see [here](https://github.com/Zirak/SO-ChatBot).
+This is a child from Zirak's SO-ChatBot. For more info, on how to use the bot, see [here](https://github.com/Zirak/SO-ChatBot).
 
 > Build: `run build`
 

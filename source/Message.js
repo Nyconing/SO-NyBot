@@ -40,6 +40,7 @@ exports.Message = function (text, msgObj) {
         getRoomId: function(){
             return msgObj.room_id;
         },
+
         // parse() parses the original message
         // parse( true ) also turns every match result to a Message
         // parse( msgToParse ) parses msgToParse
