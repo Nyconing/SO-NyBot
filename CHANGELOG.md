@@ -4,4 +4,4 @@ major 1.0.0:
 
 minor 1.1.0:
 
-`command.multilines: true`
+`bot.registerListener()`

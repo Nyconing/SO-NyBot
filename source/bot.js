@@ -5,7 +5,7 @@ var SuggestionDictionary = require('./suggestionDict').SuggestionDictionary;
 var IO = require('./IO');
 
 var bot = window.bot = {
-    botVersion: 1.00,
+    botVersion: 1.10,
     IO: IO,
 
     Command: require('./Command').Command,

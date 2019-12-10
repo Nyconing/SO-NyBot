@@ -1,6 +1,6 @@
 {
-  "name": "so-chatbot",
-  "version": "1.0.0",
+  "name": "so-nybot",
+  "version": "1.1.0",
   "description": "A chatbot for StackOverflow.",
   "main": "run-headless.js",
   "dependencies": {
@@ -23,13 +23,13 @@
   },
   "keywords": [
     "chatbot",
-    "horse-lime",
-    "goats"
+    "stack",
+    "overflow"
   ],
-  "author": "Zirak",
+  "author": "Nyconing",
   "license": "WTFPL",
   "bugs": {
-    "url": "https://github.com/Zirak/SO-ChatBot/issues"
+    "url": "https://github.com/Nyconing/SO-NyBot/issues"
   },
-  "homepage": "https://github.com/Zirak/SO-ChatBot#readme"
+  "homepage": "https://github.com/Nyconing/SO-NyBot"
 }
