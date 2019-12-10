@@ -249,6 +249,8 @@ var bot = window.bot = {
             '(' +
             listener.listening.map((x) => {
                 return listener.caseSensitive ? x : x.toLowerCase()
+            }).map((x) => {
+                return ' ' + x + ' ';
             }).map(RegExp.escape).join('|') +
             ')[\\.!?]?'
         );
@@ -258,8 +260,12 @@ var bot = window.bot = {
                 if (!listener.cds[event.room_id]) listener.cds[event.room_id] = new Date().getTime() - 50;
                 if (listener.cds[event.room_id] < new Date().getTime()) {
                     var c = event.content;
-                    if (bot.isPartial(c)) console.log('Listener not supports partial msg currently');
-                    if (bot.isMultiLines(c)) c = bot.breakMultilineMessage(c);
+                    if (bot.isPartial(c)) {
+                        console.log('Listener not supports partial msg currently');
+                    }
+                    if (bot.isMultiLines(c)) {
+                        c = bot.breakMultilineMessage(c);
+                    }
                     listener.response(bot.Message(c, event));
                 }
                 listener.cds[event.room_id] = new Date().getTime() + (listener.cooldown * 1000);
