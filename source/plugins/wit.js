@@ -1,9 +1,8 @@
 module.exports = function (bot) {
     bot.registerListener({
         name: 'witai',
-        listening: ['nybot'],
-        caseSensitive: false,
-        cooldown: 1,
+        listening: [/^nybot/i],
+        cooldown: 0,
         response: (message) => {
             const {Wit, log} = require('node-wit');
 

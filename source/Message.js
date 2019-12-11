@@ -41,15 +41,23 @@ exports.Message = function (text, msgObj) {
             return msgObj.room_id;
         },
         edit: function(text) {
-            bot.IO.xhr({
-                url: '/messages/' + msgObj.message_id,
-                data: fkey({
-                    text: text
-                }),
-                method: 'POST',
-                complete: function (resp, xhr) {
-                }
-            });
+            var sending = () => {
+                bot.IO.xhr({
+                    url: '/messages/' + msgObj.message_id,
+                    data: fkey({
+                        text: text
+                    }),
+                    method: 'POST',
+                    complete: function (resp, xhr) {
+                        if (xhr.status === 409) {
+                            setTimeout(() => {
+                                sending();
+                            }, 2000);
+                        }
+                    }
+                });
+            };
+            sending();
         },
         // parse() parses the original message
         // parse( true ) also turns every match result to a Message

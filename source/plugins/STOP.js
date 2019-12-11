@@ -9,49 +9,17 @@ module.exports = function (bot) {
         SISTITE: 'MALLEUS TEMPUS!'
     };
 
-    bot.registerListener(
-        {
-            name: 'stop2',
-            listening: ['stahp'],
-            caseSensitive: false,
-            cooldown: 60 * 5,
-            response: (message) => {
-                message.directSend('HAMMAHTIME!');
-            }
+    bot.registerListener({
+        name: 'stop',
+        listening: [
+            /(STAHP[.!? ]|HALT[.!? ]|STOY[.!? ]|SISTITE[.!? ])$/i
+        ],
+        cooldown: 60 * 5,
+        response: (message, match) => {
+            if (match[0][0].toLowerCase().startsWith('stahp')) message.directSend('HAMMAHTIME!');
+            if (match[0][0].toLowerCase().startsWith('halt')) message.directSend('HAMMERZEIT!');
+            if (match[0][0].toLowerCase().startsWith('stoy')) message.directSend('ZABIVAT\' VREMYA!');
+            if (match[0][0].toLowerCase().startsWith('sistite')) message.directSend('MALLEUS TEMPUS!');
         }
-    );
-    bot.registerListener(
-        {
-            name: 'stop3',
-            listening: ['halt'],
-            caseSensitive: false,
-            cooldown: 60 * 5,
-            response: (message) => {
-                message.directSend('HAMMERZEIT!');
-            }
-        }
-    );
-    bot.registerListener(
-        {
-            name: 'stop4',
-            listening: ['stoy'],
-            caseSensitive: false,
-            cooldown: 60 * 5,
-            response: (message) => {
-                message.directSend('ZABIVAT\' VREMYA!');
-            }
-        }
-    );
-    bot.registerListener(
-        {
-            name: 'stop5',
-            listening: ['SISTITE'],
-            caseSensitive: false,
-            cooldown: 60 * 5,
-            response: (message) => {
-                message.directSend('MALLEUS TEMPUS!');
-            }
-        }
-    );
-
+    });
 };

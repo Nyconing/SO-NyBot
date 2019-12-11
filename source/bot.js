@@ -245,28 +245,23 @@ var bot = window.bot = {
 
     registerListener: function(listener) {
         // /(STOP|STAHP|...)[\.!\?]?$/
-        var reg = new RegExp(
-            '(' +
-            listener.listening.map((x) => {
-                return listener.caseSensitive ? x : x.toLowerCase()
-            }).map((x) => {
-                return  x;
-            }).map(RegExp.escape).join('|') +
-            ')[\\.!?]?'
-        );
         IO.register('input', function Meow(event) {
-            if (reg.exec(listener.caseSensitive ? event.content : event.content.toLowerCase())) {
+            var content = event.content;
+            if (bot.isPartial(content)) {
+                console.log('Listener not supports partial msg currently');
+                content = '';
+            }
+            if (bot.isMultiLines(content)) {
+                content = bot.breakMultilineMessage(content).join('\n');
+            }
+            var results = listener.listening.map((regex) => regex.exec(content));
+            if (results.some((r) => r != null)) {
                 if (!listener.cds) listener.cds = {};
                 if (!listener.cds[event.room_id]) listener.cds[event.room_id] = new Date().getTime() - 50;
                 if (listener.cds[event.room_id] < new Date().getTime()) {
-                    var c = event.content;
-                    if (bot.isPartial(c)) {
-                        console.log('Listener not supports partial msg currently');
+                    if (event.user_id > 2) {
+                        listener.response(bot.Message(content, event), results);
                     }
-                    if (bot.isMultiLines(c)) {
-                        c = bot.breakMultilineMessage(c);
-                    }
-                    listener.response(bot.Message(c, event));
                 }
                 listener.cds[event.room_id] = new Date().getTime() + (listener.cooldown * 1000);
             }

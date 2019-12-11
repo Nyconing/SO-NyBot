@@ -28,14 +28,16 @@ module.exports = function (bot) {
 ```javascript
 module.exports = function (bot) {
     bot.registerListener({
-            name: 'stop',
-            listening: ['stahp'],
-            caseSensitive: false,
-            cooldown: 60 * 5,
-            response: (message) => {
-                message.directSend('H A M M A H T I M E !');
-            }
-        });
+        name: 'papaya',
+        listening: [
+            /(papaya[.!? ]|pawpaw[.!? ])$/i
+        ],
+        cooldown: 60 * 1,
+        response: (message, match) => {
+            if (match[0][0].toLowerCase().startsWith('papaya')) message.directReply('Pawpaw!');
+            if (match[0][0].toLowerCase().startsWith('pawpaw')) message.directReply('Papaya!');
+        }
+    });
 };
 ```
 
@@ -59,10 +61,9 @@ Add a command into bot.
 Add a listener into bot.
 
 - string `name` : Listener name.
-- string[] `listening` : Listening sentences.
-- boolean `caseSensitive` : Is listens case-sensitive..
+- RegExp[] `listening` : Listening sentences.
 - number `cooldown` : Cool down time inside room, in seconds.
-- function `response` : This will called when sentences matched, example: `(message)=>{ message.directReply('Hello'); }`
+- function `response` : This will called when sentences matched, example: `(message,match)=>{ message.directReply('Hello'); }`
   - param `message` 
 
 ## Objects
@@ -97,6 +98,9 @@ An object contains parsed message from invoker, and some useful functions that c
 ###### `reply` : `function(text, userName):void` / `function(text):void`
 - Sending the `text` to the room, with ping to the `userName`.
 - invoker user will be used when `userName` was not provided.
+
+###### `edit` : `function(text):XMLHttpRequest`
+- Edits the message.
 
 ###### `directSend` : `function(text):void`
 - Sending the `text` to the room. (same as `send`)
