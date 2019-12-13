@@ -10,8 +10,6 @@ module.exports = function (bot) {
             });
         }
     });
-};
-module.exports = function (bot) {
     bot.addCommand({
         name: 'persian',
         description: '[The Cat API](https://thecatapi.com/)',

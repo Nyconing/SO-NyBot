@@ -12,7 +12,7 @@ module.exports = function (bot) {
     bot.registerListener({
         name: 'stop',
         listening: [
-            /(STAHP[.!? ]|HALT[.!? ]|STOY[.!? ]|SISTITE[.!? ])$/i
+            /(STAHP[.!?]|HALT[.!?]|STOY[.!?]|SISTITE[.!?])$/i
         ],
         cooldown: 60 * 5,
         response: (message, match) => {
